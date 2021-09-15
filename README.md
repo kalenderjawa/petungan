@@ -1,6 +1,6 @@
 # Petungan (Perhitungan)
 
-Utilitas untuk pengkonversian tanggal
+Utilitas untuk pengkonversian penanggalan.
 
 ## Fitur
 
