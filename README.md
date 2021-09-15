@@ -1,4 +1,4 @@
-# Ngetung (Menghitung)
+# Petungan (Perhitungan)
 
 Utilitas untuk pengkonversian tanggal
 
