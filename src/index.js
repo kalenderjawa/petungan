@@ -57,6 +57,7 @@ function konversiTahunJawaKeTahunMasehi(tahun) {
 }
 
 export {
+  konversiTahunJawaKeTahunMasehi,
   konversiTahunMasehiKeTahunJawa,
   tabelKonstantaKonversiTahunJawa,
   tabelKonstantaKonversiTahunMasehi,
