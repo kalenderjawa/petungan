@@ -79,26 +79,27 @@ function konversiTahunHijriyahKeTahunJawa(tahun) {
 /**
  * Cari referensi tahun untuk mencari konstanta konversi tahun
  * @param {Number} tahun
+ * @param {Array} tabelKonstantaKonversiTahun
  */
-function cariTahunReferensi(list, tahun) {
+function cariTahunReferensi(tabelKonstantaKonversiTahun, tahun) {
   //binary search algorithm
   let awalan = 0;
   let tengah = 0;
   let targetTahunAwal = 0;
   let targetTahunAkhir = 0;
-  let akhiran = list.length - 1;
+  let akhiran = tabelKonstantaKonversiTahun.length - 1;
 
   while (awalan <= akhiran) {
     tengah = Math.floor((awalan + akhiran) / 2);
-    targetTahunAwal = list[tengah].tahunAwal;
-    targetTahunAkhir = list[tengah].tahunAkhir;
+    targetTahunAwal = tabelKonstantaKonversiTahun[tengah].tahunAwal;
+    targetTahunAkhir = tabelKonstantaKonversiTahun[tengah].tahunAkhir;
 
     if (
       (tahun > targetTahunAwal && tahun < targetTahunAkhir) ||
       tahun === targetTahunAwal ||
       tahun === targetTahunAkhir
     ) {
-      return list[tengah];
+      return tabelKonstantaKonversiTahun[tengah];
     } else if (targetTahunAwal > tahun) {
       akhiran = tengah - 1;
     } else {
