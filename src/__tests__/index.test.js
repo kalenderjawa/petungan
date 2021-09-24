@@ -26,3 +26,15 @@ describe("Test Cari Konstanta Konversi Tahun Referensi Jawa", () => {
   });
 });
 
+describe("Test Cari Konstanta Konversi Tahun Referensi Masehi", () => {
+  it("Konstanta Konversi Tahun Jawa 1633 adalah 78", () => {
+    expect(cariTahunReferensi(tabelKonstantaKonversiTahunMasehi(), 1633)?.konstan).toBe(78);
+  });
+  it("Konstanta Konversi Tahun Jawa 2022 adalah 67", () => {
+    expect(cariTahunReferensi(tabelKonstantaKonversiTahunMasehi(), 2022)?.konstan).toBe(67);
+  });
+  it("Konstanta Konversi Tahun Jawa 2890 adalah 42", () => {
+    expect(cariTahunReferensi(tabelKonstantaKonversiTahunMasehi(), 2890)?.konstan).toBe(42);
+  });
+});
+
