@@ -25,3 +25,4 @@ describe("Test Cari Konstanta Konversi Tahun Referensi Jawa", () => {
     expect(cariTahunReferensi(tabelKonstantaKonversiTahunJawa(), 3288)?.konstan).toBe(28);
   });
 });
+
