@@ -48,17 +48,71 @@ function konversiTahunMasehiKeTahunJawa(tahun) {
 
 /**
  * Konversi tahun jawa ke tahun masehi
- * @param {Number} tahun 
- * @returns 
+ * @param {Number} tahun
+ * @returns
  */
 function konversiTahunJawaKeTahunMasehi(tahun) {
   //TODO
   return tahun;
 }
 
+/**
+ * Konversi tahun Jawa ke Tahun Hijriyah
+ * @param {Number} tahun
+ * @returns
+ */
+function konversiTahunJawaKeTahunHijriyah(tahun) {
+  //TODO
+  return tahun;
+}
+
+/**
+ *
+ * @param {Number} tahun
+ * @returns
+ */
+function konversiTahunHijriyahKeTahunJawa(tahun) {
+  //TODO
+  return tahun;
+}
+
+/**
+ * Cari referensi tahun untuk mencari konstanta konversi tahun
+ * @param {Number} tahun
+ */
+function cariTahunReferensi(list, tahun) {
+  //binary search algorithm
+  let awalan = 0;
+  let tengah = 0;
+  let targetTahunAwal = 0;
+  let targetTahunAkhir = 0;
+  let akhiran = list.length - 1;
+
+  while (awalan <= akhiran) {
+    tengah = Math.floor((awalan + akhiran) / 2);
+    targetTahunAwal = list[tengah].tahunAwal;
+    targetTahunAkhir = list[tengah].tahunAkhir;
+
+    if (
+      (tahun > targetTahunAwal && tahun < targetTahunAkhir) ||
+      tahun === targetTahunAwal ||
+      tahun === targetTahunAkhir
+    ) {
+      return list[tengah];
+    } else if (targetTahunAwal > tahun) {
+      akhiran = tengah - 1;
+    } else {
+      awalan = tengah + 1;
+    }
+  }
+}
+
 export {
   konversiTahunJawaKeTahunMasehi,
   konversiTahunMasehiKeTahunJawa,
+  konversiTahunHijriyahKeTahunJawa,
+  konversiTahunJawaKeTahunHijriyah,
   tabelKonstantaKonversiTahunJawa,
   tabelKonstantaKonversiTahunMasehi,
+  cariTahunReferensi,
 };
