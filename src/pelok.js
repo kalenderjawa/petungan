@@ -68,8 +68,19 @@ function cariTahunReferensi(tabelKonstantaKonversiTahun, tahun) {
   }
 }
 
+
+function cariTahunReferensiJawa(tahun) {
+  return cariTahunReferensi(tabelKonstantaKonversiTahunJawa(), tahun)
+}
+
+function cariTahunReferensiMasehi(tahun) {
+  return cariTahunReferensi(tabelKonstantaKonversiTahunMasehi(), tahun)
+}
+
 export {
   tabelKonstantaKonversiTahunJawa,
   tabelKonstantaKonversiTahunMasehi,
   cariTahunReferensi,
+  cariTahunReferensiJawa,
+  cariTahunReferensiMasehi
 };
