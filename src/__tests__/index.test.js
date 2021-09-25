@@ -2,12 +2,14 @@ import {
   tabelKonstantaKonversiTahunJawa,
   tabelKonstantaKonversiTahunMasehi,
   cariTahunReferensi,
-} from "../index.js";
-
-import {
+  cariTahunReferensiJawa,
+  cariTahunReferensiMasehi,
   konversiTahunJawaKeTahunHijriyah,
   konversiTahunHijriyahKeTahunJawa,
-} from "../jh.js";
+  konversiTahunJawaKeTahunMasehi,
+  konversiTahunMasehiKeTahunJawa,
+} from "../index.js";
+
 
 describe("Tabel Konstanta Konversi Tahun", () => {
   it("Cek jumlah data konstanta Jawa", () => {
@@ -74,5 +76,15 @@ describe("Test konversi Hijriyah ke Jawa", () => {
 
   it("Konversi Tahun Hijriyah 1443 adalah 1955", () => {
     expect(konversiTahunHijriyahKeTahunJawa(1443)).toBe(1955);
+  });
+});
+
+describe("Test konversi Jawa ke Masehi", () => {
+  it("Konversi Tahun Jawa 1955 ke Masehi adalah 2022", () => {
+    expect(konversiTahunJawaKeTahunMasehi(1955)).toBe(2022);
+  });
+
+  it("Konversi Tahun Jawa 1555 ke Tahun Masehi adalah 1603", () => {
+    expect(konversiTahunJawaKeTahunMasehi(1555)).toBe(1633);
   });
 });
