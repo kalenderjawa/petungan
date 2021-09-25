@@ -65,4 +65,14 @@ describe("Test Konversi Jawa Ke Hijriyah", () => {
   it("Konversi Tahun Jawa 2500 adalah 1500", () => {
     expect(konversiTahunJawaKeTahunHijriyah(1500)).toBe(1500);
   });
-})
+});
+
+describe("Test konversi Hijriyah ke Jawa", () => {
+  it("Konversi Tahun Hijriyah 1403 adalah 1915", () => {
+    expect(konversiTahunHijriyahKeTahunJawa(1403)).toBe(1915);
+  });
+
+  it("Konversi Tahun Hijriyah 1443 adalah 1955", () => {
+    expect(konversiTahunHijriyahKeTahunJawa(1443)).toBe(1955);
+  });
+});
