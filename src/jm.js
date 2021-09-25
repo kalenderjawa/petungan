@@ -1,21 +1,23 @@
+import { cariTahunReferensiJawa, cariTahunReferensiMasehi } from "./pelok.js";
+
 /**
  * Konversi tahun masehi ke tahun jawa
- * @param {Number} tahun
+ * @param {Number} tahunMasehi
  * @returns
  */
-function konversiTahunMasehiKeTahunJawa(tahun) {
-  //TODO
-  return tahun;
+function konversiTahunMasehiKeTahunJawa(tahunMasehi) {
+  let konstMasehi = cariTahunReferensiMasehi(tahunMasehi)
+  return tahunMasehi - konstMasehi?.konstan;
 }
 
 /**
  * Konversi tahun jawa ke tahun masehi
- * @param {Number} tahun
+ * @param {Number} tahunJawa
  * @returns
  */
-function konversiTahunJawaKeTahunMasehi(tahun) {
-  //TODO
-  return tahun;
+function konversiTahunJawaKeTahunMasehi(tahunJawa) {
+  let konstJawa = cariTahunReferensiJawa(tahunJawa)
+  return tahunJawa + konstJawa?.konstan;
 }
 
 export { konversiTahunMasehiKeTahunJawa, konversiTahunJawaKeTahunMasehi };
