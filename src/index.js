@@ -8,3 +8,8 @@ export {
   konversiTahunJawaKeTahunHijriyah,
   konversiTahunHijriyahKeTahunJawa,
 } from "./jh.js";
+
+export {
+  konversiTahunJawaKeTahunMasehi,
+  konversiTahunMasehiKeTahunJawa,
+} from "./jm.js";
