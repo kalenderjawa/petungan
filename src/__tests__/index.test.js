@@ -1,13 +1,7 @@
 import {
   tabelKonstantaKonversiTahunJawa,
   tabelKonstantaKonversiTahunMasehi,
-  cariTahunReferensi,
-  cariTahunReferensiJawa,
-  cariTahunReferensiMasehi,
-  konversiTahunJawaKeTahunHijriyah,
-  konversiTahunHijriyahKeTahunJawa,
-  konversiTahunJawaKeTahunMasehi,
-  konversiTahunMasehiKeTahunJawa,
+  cariTahunReferensi
 } from "../index.js";
 
 
@@ -56,50 +50,3 @@ describe("Test Cari Konstanta Konversi Tahun Referensi Masehi", () => {
     ).toBe(42);
   });
 });
-
-describe("Test Konversi Jawa Ke Hijriyah", () => {
-  it("Konversi Tahun Jawa 1555 adalah 1043", () => {
-    expect(konversiTahunJawaKeTahunHijriyah(1555)).toBe(1043);
-  });
-  it("Konversi Tahun Jawa 1955 adalah 1443", () => {
-    expect(konversiTahunJawaKeTahunHijriyah(1955)).toBe(1443);
-  });
-  it("Konversi Tahun Jawa 2500 adalah 1500", () => {
-    expect(konversiTahunJawaKeTahunHijriyah(1500)).toBe(1500);
-  });
-});
-
-describe("Test konversi Hijriyah ke Jawa", () => {
-  it("Konversi Tahun Hijriyah 1403 adalah 1915", () => {
-    expect(konversiTahunHijriyahKeTahunJawa(1403)).toBe(1915);
-  });
-
-  it("Konversi Tahun Hijriyah 1443 adalah 1955", () => {
-    expect(konversiTahunHijriyahKeTahunJawa(1443)).toBe(1955);
-  });
-});
-
-describe("Test konversi Jawa ke Masehi", () => {
-  it("Konversi Tahun Jawa 1955 ke Masehi adalah 2022", () => {
-    expect(konversiTahunJawaKeTahunMasehi(1955)).toBe(2022);
-  });
-
-  it("Konversi Tahun Jawa 1555 ke Tahun Masehi adalah 1603", () => {
-    expect(konversiTahunJawaKeTahunMasehi(1555)).toBe(1633);
-  });
-});
-
-describe("Test konversi Masehi ke Jawa", () => {
-  it("Konversi Tahun Masehi 1633 ke Jawa adalah 1555", () => {
-    expect(konversiTahunMasehiKeTahunJawa(1633)).toBe(1555);
-  });
-
-  it("Konversi Tahun Masehi 1983 ke Jawa adalah 1555", () => {
-    expect(konversiTahunMasehiKeTahunJawa(1983)).toBe(1915);
-  });
-
-
-  it("Konversi Tahun Masehi 2022 ke Jawa adalah 1955", () => {
-    expect(konversiTahunMasehiKeTahunJawa(2022)).toBe(1955);
-  });
-})
