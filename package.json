@@ -1,5 +1,5 @@
 {
-  "name": "petungan",
+  "name": "@kalenderjawa/petungan",
   "version": "1.0.0-alpha",
   "description": "Utilitas untuk pengkonversian sistem Kalender Jawa.",
   "main": "lib/petungan.min.cjs",
