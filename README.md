@@ -2,6 +2,16 @@
 
 Utilitas untuk pengkonversian penanggalan Jawa ke sistem penanggalan Gregorian (Masehi) dan Hijriyah.
 
+## Instalasi
+
+Utilitas ini didesain supaya bisa di pakai pada lingkungan browser maupun pada lingkungan node.js
+
+### Browser
+
+```html
+<script src="https://unpkg.com/petungan"></script>
+```
+
 ## Kalender Jawa - Kalender Masehi
 
 ### Konversi Tahun Jawa Ke Tahun Masehi
