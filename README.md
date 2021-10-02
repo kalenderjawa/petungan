@@ -1,14 +1,21 @@
 # Petungan (Perhitungan)
 
-Utilitas untuk pengkonversian penanggalan.
+Utilitas untuk pengkonversian penanggalan Jawa ke sistem penanggalan Gregorian (Masehi) dan Hijriyah.
 
-## Fitur
+## Konversi Kalender Jawa Ke Kalender Masehi
 
-Pengkonversian tanggal dari:
+### Konversi Tahun
 
-- Jawa ke Masehi
-- Masehi ke Jawa
-- Jawa ke Hijriyah
-- Hijriyah Ke Masehi
+**`konversiTahunJawaKeTahunMasehi(tahunJawa)`**
 
+Pengkonversian dari tahun Jawa ke tahun Masehi.
 
+Sebagai contoh:
+
+```javascript
+let tahunMasehi = konversiTahunJawaKeTahunMasehi(1955);
+
+console.log(tahunMasehi); // 2022
+```
+
+Perubahan tahun Jawa ke tahun Masehi berdasarkan konstanta tabel yang didapat dari API `tabelKonstantaKonversiTahunJawa()`
