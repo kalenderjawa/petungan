@@ -8,8 +8,40 @@ Utilitas ini didesain supaya bisa di pakai pada lingkungan browser maupun pada l
 
 ### Browser
 
+Untuk browser yang tidak mendukung ES Module, bisa dipakai _library_ versi `petungan.browser.min.js`
+
 ```html
-<script src="https://unpkg.com/petungan"></script>
+<script src="https://unpkg.com/@kalenderjawa/petungan"></script>
+
+<script>
+  console.log(Petungan);
+</script>
+```
+
+Sedangkan untuk browser modern yang kebanyakan sudah mendukung ES Module maka pakailah _library_ versi ESM
+
+```javascript
+<script type="module">
+  import {konversiTahunJawaKeTahunMasehi} from
+  "https://unpkg.com/@kalenderjawa/petungan"
+
+  console.log(konversiTahunJawaKeTahunMasehi(1955))
+</script>
+```
+
+### Node.js
+
+```bash
+npm install --save @kalenderjawa/petungan
+```
+
+`import` *library* ke kode
+
+```javascript
+import {konversiTahunMasehiKeTahunJawa} from "@kalenderjawa/petungan";
+
+let tahunMasehi = 1955;
+let tauhnJawa = konversiTahunMasehiKeTahunJawa(tahunMasehi);
 ```
 
 ## Kalender Jawa - Kalender Masehi
