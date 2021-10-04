@@ -22,8 +22,7 @@ Sedangkan untuk browser modern yang kebanyakan sudah mendukung ES Module maka pa
 
 ```javascript
 <script type="module">
-  import {konversiTahunJawaKeTahunMasehi} from
-  "https://unpkg.com/@kalenderjawa/petungan"
+  import {konversiTahunJawaKeTahunMasehi} from "https://unpkg.com/@kalenderjawa/petungan"
 
   console.log(konversiTahunJawaKeTahunMasehi(1955))
 </script>
