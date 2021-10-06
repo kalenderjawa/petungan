@@ -1,4 +1,4 @@
-# Petungan (Perhitungan)
+# @kalenderjawa/petungan
 
 Utilitas untuk pengkonversian penanggalan Jawa ke sistem penanggalan Gregorian (Masehi) dan Hijriyah.
 
