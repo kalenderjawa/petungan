@@ -29,7 +29,7 @@
     "type": "git",
     "url": "git+https://github.com/kalenderjawa/petungan.git"
   },
-  "keywords": [],
+  "keywords": ["jawa ke masehi", "masehi ke hijriyah", "hijriyah ke masehi", "jawa ke hijriyah", "konversi tahun", "kalender jawa"],
   "author": "Equan Pr. <equan.p@gmail.com>",
   "license": "MIT",
   "bugs": {
