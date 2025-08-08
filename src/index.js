@@ -30,6 +30,8 @@
 export {
   konversiJawaMasehiDirect,
   konversiMasehiJawaDirect,
+  konversiJawaMasehiPrecise,
+  konversiMasehiJawaPrecise,
   JAVANESE_CALENDAR_CONSTANTS,
 } from "./pelok.js";
 

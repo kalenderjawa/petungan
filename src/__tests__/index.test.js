@@ -14,6 +14,8 @@ import {
   // New direct conversion functions
   konversiJawaMasehiDirect,
   konversiMasehiJawaDirect,
+  konversiJawaMasehiPrecise,
+  konversiMasehiJawaPrecise,
   JAVANESE_CALENDAR_CONSTANTS,
   
   // Legacy functions for compatibility testing
@@ -56,6 +58,60 @@ describe("NEW: Direct Mathematical Conversion Functions", () => {
       expect(() => konversiMasehiJawaDirect("1633")).toThrow("Invalid Gregorian year: must be an integer");
       expect(() => konversiMasehiJawaDirect(1633.5)).toThrow("Invalid Gregorian year: must be an integer");
     });
+  });
+});
+
+describe("NEW: Precise Hijri-based Conversion Functions", () => {
+  it("should map base epoch correctly (1555 AJ → 1633 CE, 1 Sura)", () => {
+    expect(konversiJawaMasehiPrecise(1555)).toBe(1633);
+  });
+
+  it("should map modern examples consistently (year of 1 Sura)", () => {
+    // 1955 AJ corresponds to Hijri 1443; 1 Muharram 1443 is in 2021 CE
+    expect(konversiJawaMasehiPrecise(1955)).toBe(2021);
+  });
+
+  it("should invert within the same Gregorian year window", () => {
+    const g = 2021;
+    const j = konversiMasehiJawaPrecise(g);
+    // 1 Muharram 1443 AH is in 2021 → 1443 + 512 = 1955 AJ
+    expect(j).toBe(1955);
+  });
+
+  it("should map 1958 AJ ↔ 2024 CE (1 Muharram 1446)", () => {
+    expect(konversiJawaMasehiPrecise(1958)).toBe(2024);
+    expect(konversiMasehiJawaPrecise(2024)).toBe(1958);
+  });
+
+  it("should warn but compute for pre-reform Javanese years (e.g., 1500)", () => {
+    const spy = jest.spyOn(console, 'warn').mockImplementation();
+    const result = konversiJawaMasehiPrecise(1500);
+    expect(typeof result).toBe('number');
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
+  it("should be reversible for multiple reference years", () => {
+    const jawaYears = [1555, 1600, 1800, 1955, 1958, 2000];
+    jawaYears.forEach(jawa => {
+      const g = konversiJawaMasehiPrecise(jawa);
+      const back = konversiMasehiJawaPrecise(g);
+      expect(back).toBe(jawa);
+    });
+  });
+
+  it("Gregorian → Javanese precise mapping should be monotonic year-to-year", () => {
+    const years = [2020, 2021, 2022, 2023, 2024, 2025, 2026];
+    const mapped = years.map(y => konversiMasehiJawaPrecise(y));
+    for (let i = 1; i < mapped.length; i++) {
+      const diff = mapped[i] - mapped[i - 1];
+      expect(diff).toBeGreaterThanOrEqual(0);
+      expect(diff).toBeLessThanOrEqual(1);
+    }
+  });
+
+  it("Direct and Precise should differ on known cases (e.g., 1955 AJ)", () => {
+    expect(konversiJawaMasehiDirect(1955)).not.toBe(konversiJawaMasehiPrecise(1955));
   });
 });
 
