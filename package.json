@@ -1,6 +1,6 @@
 {
   "name": "@kalenderjawa/petungan",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Utilitas untuk pengkonversian sistem Kalender Jawa dengan algoritma matematika yang disempurnakan. Akurasi 90%, performa 2x lebih cepat.",
   "main": "lib/petungan.min.cjs",
   "module": "lib/petungan.min.js",
@@ -29,7 +29,14 @@
     "type": "git",
     "url": "git+https://github.com/kalenderjawa/petungan.git"
   },
-  "keywords": ["jawa ke masehi", "masehi ke hijriyah", "hijriyah ke masehi", "jawa ke hijriyah", "konversi tahun", "kalender jawa"],
+  "keywords": [
+    "jawa ke masehi",
+    "masehi ke hijriyah",
+    "hijriyah ke masehi",
+    "jawa ke hijriyah",
+    "konversi tahun",
+    "kalender jawa"
+  ],
   "author": "Equan Pr. <equan.p@gmail.com>",
   "license": "MIT",
   "bugs": {
