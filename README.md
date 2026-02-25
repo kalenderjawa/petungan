@@ -1,34 +1,48 @@
-# @kalenderjawa/petungan v2.0.0
+# @kalenderjawa/petungan
 
-**🎉 MAJOR UPDATE: Perfect Mathematical Algorithm**
+Utilitas konversi tahun antar sistem Kalender Jawa, Masehi (Gregorian), dan Hijriyah.
 
-Utilitas untuk pengkonversian penanggalan Jawa ke sistem penanggalan Gregorian (Masehi) dan Hijriyah dengan algoritma matematika yang disempurnakan.
+```
+Kalender Jawa (AJ) <--> Kalender Masehi (CE) <--> Kalender Hijriyah (AH)
+```
 
-## ✨ Apa yang Baru di v2.0.0
+## Latar Belakang
 
-### 🚀 Peningkatan Performa
-- **90% akurasi** (naik dari 82% di versi sebelumnya)
-- **2x lebih cepat** dalam konversi
-- **90% pengurangan penggunaan memori** (tidak lagi menggunakan tabel lookup besar)
-- **Perfect reversibility** untuk sebagian besar konversi
+Masyarakat Jawa masih aktif menggunakan **Kalender Jawa** untuk menentukan hari baik (pernikahan, pindah rumah), upacara adat (1 Sura, Sekaten), perhitungan weton/neptu, serta membaca prasasti dan naskah kuno yang memakai penanggalan Jawa.
 
-### 🔧 Perbaikan Teknis
-- Mengganti sistem tabel lookup dengan **algoritma matematika langsung**
-- Memperbaiki masalah boundary condition yang mempengaruhi ~18% konversi
-- Dukungan untuk tahun historis sebelum 1555 AJ
-- Validasi input yang komprehensif dan error handling yang lebih baik
+Masalahnya, Kalender Jawa bukan Kalender Masehi dan bukan Kalender Hijriyah murni — meskipun berbasis lunar seperti Hijriyah. Konversi antar ketiganya memerlukan pemahaman sejarah dan matematika kalender.
 
-### 🧭 Minor Update (2.0.x): Presisi Hijriyah/JDN untuk Pemetaan Tahun
+### Reformasi Sultan Agung (1633 M)
 
-- Tambah API presisi berbasis kalender Islam sipil/tabular (Hijriyah) dan Julian Day Number (JDN):
-  - `konversiJawaMasehiPrecise(jawaYear)` → tahun Masehi saat 1 Sura jatuh
-  - `konversiMasehiJawaPrecise(gregorianYear)` → tahun Jawa yang 1 Suranya dimulai dalam tahun Masehi tersebut
-- Cocok untuk kebutuhan yang memerlukan akurasi tahun (berdasarkan 1 Muharram/1 Sura). Untuk konversi tanggal penuh (hari/bulan), gunakan algoritme kalender Jawa lengkap.
+Sebelum 1633, Jawa menggunakan kalender **Saka** (solar, warisan Hindu). Sultan Agung menggantinya ke sistem **lunar** mengikuti Hijriyah, tapi **tidak me-reset nomor tahun**. Tahun Saka 1555 langsung berlanjut sebagai tahun Jawa 1555, padahal saat itu tahun Hijriyah baru 1043.
 
-### 🔄 Backward Compatibility
-- **100% kompatibel** dengan kode yang sudah ada
-- Semua nama fungsi dan signature tetap sama
-- Fungsi legacy tetap tersedia untuk kompatibilitas
+Hasilnya:
+
+| Sistem | Tahun Dasar | Basis |
+|--------|------------|-------|
+| Jawa | 1555 AJ | Lunar (~354 hari/tahun) |
+| Masehi | 1633 CE | Solar (~365.25 hari/tahun) |
+| Hijriyah | 1043 AH | Lunar (~354 hari/tahun) |
+
+### Mengapa Konversi Tidak Sederhana
+
+**Jawa <-> Hijriyah** mudah — keduanya lunar, selisih tetap 512 tahun:
+
+```
+Hijriyah = Jawa - 512   (selalu tepat, 100% reversible)
+```
+
+**Jawa <-> Masehi** lebih rumit — lunar vs solar punya panjang tahun berbeda (~11 hari/tahun). Setiap ~34 tahun, kalender lunar "tertinggal" 1 tahun penuh dari kalender solar. Selisih yang awalnya 78 terus menyusut:
+
+```
+Tahun Jawa 1555  -->  Masehi 1633  (selisih 78)
+Tahun Jawa 1589  -->  Masehi 1666  (selisih 77)
+Tahun Jawa 1623  -->  Masehi 1699  (selisih 76)
+...
+Tahun Jawa 1955  -->  Masehi 2022  (selisih 67)
+```
+
+Library ini menangani perhitungan tersebut dengan algoritma matematika langsung.
 
 ## Instalasi
 
@@ -60,86 +74,53 @@ Untuk browser modern dengan ES Module:
 npm install --save @kalenderjawa/petungan@2
 ```
 
-Import library ke kode:
-
 ```javascript
 import {konversiTahunMasehiKeTahunJawa} from "@kalenderjawa/petungan";
 
-let tahunMasehi = 2022;
-let tahunJawa = konversiTahunMasehiKeTahunJawa(tahunMasehi);
-console.log(tahunJawa); // 1956
-```
-
-## 📖 Penggunaan
-
-### Konversi Tahun Jawa ↔ Masehi
-
-#### Jawa ke Masehi
-
-```javascript
-import {konversiTahunJawaKeTahunMasehi} from "@kalenderjawa/petungan";
-
-// Contoh konversi
-console.log(konversiTahunJawaKeTahunMasehi(1555)); // 1633 (tahun dasar Sultan Agung)
-console.log(konversiTahunJawaKeTahunMasehi(1955)); // 2022
-console.log(konversiTahunJawaKeTahunMasehi(1958)); // 2025
-```
-
-#### Masehi ke Jawa
-
-```javascript
-import {konversiTahunMasehiKeTahunJawa} from "@kalenderjawa/petungan";
-
-// Contoh konversi
-console.log(konversiTahunMasehiKeTahunJawa(1633)); // 1555 (tahun dasar)
 console.log(konversiTahunMasehiKeTahunJawa(2022)); // 1955
-console.log(konversiTahunMasehiKeTahunJawa(2025)); // 1958
 ```
 
-### Konversi Tahun Jawa ↔ Hijriyah
+## Penggunaan
 
-#### Jawa ke Hijriyah
-
-```javascript
-import {konversiTahunJawaKeTahunHijriyah} from "@kalenderjawa/petungan";
-
-console.log(konversiTahunJawaKeTahunHijriyah(1555)); // 1043
-console.log(konversiTahunJawaKeTahunHijriyah(1955)); // 1443
-```
-
-#### Hijriyah ke Jawa
-
-```javascript
-import {konversiTahunHijriyahKeTahunJawa} from "@kalenderjawa/petungan";
-
-console.log(konversiTahunHijriyahKeTahunJawa(1043)); // 1555
-console.log(konversiTahunHijriyahKeTahunJawa(1443)); // 1955
-```
-
-## 🔬 API Baru (v2.0.0)
-
-### Dua Opsi API: Cepat vs Presisi
-
-- Untuk performa maksimal (approx. year-number mapping), gunakan fungsi konversi langsung:
+### Konversi Tahun Jawa <-> Masehi
 
 ```javascript
 import {
-  konversiJawaMasehiDirect,
-  konversiMasehiJawaDirect,
-  JAVANESE_CALENDAR_CONSTANTS
+  konversiTahunJawaKeTahunMasehi,
+  konversiTahunMasehiKeTahunJawa,
 } from "@kalenderjawa/petungan";
 
-// Konversi langsung (approx.) dengan validasi ketat
-const gregorian = konversiJawaMasehiDirect(1955); // 2022
-const javanese = konversiMasehiJawaDirect(2022);   // 1955
+// Jawa ke Masehi
+konversiTahunJawaKeTahunMasehi(1555)  // 1633 (tahun dasar Sultan Agung)
+konversiTahunJawaKeTahunMasehi(1955)  // 2022
+konversiTahunJawaKeTahunMasehi(1958)  // 2025
 
-// Akses konstanta kalender
-console.log(JAVANESE_CALENDAR_CONSTANTS.BASE_JAWA);      // 1555
-console.log(JAVANESE_CALENDAR_CONSTANTS.BASE_GREGORIAN); // 1633
-console.log(JAVANESE_CALENDAR_CONSTANTS.HIJRI_OFFSET);   // 512
+// Masehi ke Jawa
+konversiTahunMasehiKeTahunJawa(1633)  // 1555
+konversiTahunMasehiKeTahunJawa(2022)  // 1955
+konversiTahunMasehiKeTahunJawa(2025)  // 1958
 ```
 
-- Untuk presisi (tahun Masehi ketika 1 Sura/1 Muharram jatuh), gunakan fungsi Hijriyah berbasis JDN:
+### Konversi Tahun Jawa <-> Hijriyah
+
+```javascript
+import {
+  konversiTahunJawaKeTahunHijriyah,
+  konversiTahunHijriyahKeTahunJawa,
+} from "@kalenderjawa/petungan";
+
+// Jawa ke Hijriyah
+konversiTahunJawaKeTahunHijriyah(1555)  // 1043
+konversiTahunJawaKeTahunHijriyah(1955)  // 1443
+
+// Hijriyah ke Jawa
+konversiTahunHijriyahKeTahunJawa(1043)  // 1555
+konversiTahunHijriyahKeTahunJawa(1443)  // 1955
+```
+
+### API Presisi (Berbasis JDN)
+
+Selain konversi cepat di atas, library juga menyediakan fungsi **presisi** yang menghitung tahun Masehi berdasarkan kapan **1 Sura** (tahun baru Jawa) jatuh, menggunakan Julian Day Number melalui kalender Islam sipil/tabular:
 
 ```javascript
 import {
@@ -147,137 +128,117 @@ import {
   konversiMasehiJawaPrecise,
 } from "@kalenderjawa/petungan";
 
-// Presisi: tahun Masehi saat 1 Sura tahun 1955 AJ dimulai
-console.log(konversiJawaMasehiPrecise(1955)); // 2021 (1 Muharram 1443 ada di 2021)
+// Tahun Masehi saat 1 Sura 1955 AJ dimulai
+konversiJawaMasehiPrecise(1955)   // 2021 (1 Muharram 1443 jatuh di 2021)
 
-// Presisi: tahun Jawa yang 1 Suranya jatuh pada tahun Masehi tertentu
-console.log(konversiMasehiJawaPrecise(2021)); // 1955
+// Tahun Jawa yang 1 Sura-nya jatuh di tahun Masehi 2024
+konversiMasehiJawaPrecise(2024)   // 1958
 ```
 
-Catatan: Fungsi “Precise” menggunakan kalender Islam sipil/tabular (Hijriyah) via Julian Day Number. Untuk konversi tanggal-hari penuh (bukan hanya tahun), diperlukan algoritme kalender Jawa lengkap (windu/kurup).
+### API Direct (Konversi Cepat dengan Validasi Ketat)
 
-## 🧮 Dasar Matematika
+```javascript
+import {
+  konversiJawaMasehiDirect,
+  konversiMasehiJawaDirect,
+  JAVANESE_CALENDAR_CONSTANTS,
+} from "@kalenderjawa/petungan";
 
-### Formula Konversi Jawa ↔ Masehi
+konversiJawaMasehiDirect(1955)  // 2022
+konversiMasehiJawaDirect(2022)  // 1955
 
-Algoritma baru menggunakan formula matematika langsung:
+// Akses konstanta kalender
+JAVANESE_CALENDAR_CONSTANTS.BASE_JAWA       // 1555
+JAVANESE_CALENDAR_CONSTANTS.BASE_GREGORIAN  // 1633
+JAVANESE_CALENDAR_CONSTANTS.HIJRI_OFFSET    // 512
+```
+
+Catatan: Fungsi "Direct" vs "Precise" bisa menghasilkan hasil berbeda untuk tahun yang sama. Direct menghitung pemetaan tahun secara aproksimasi, sedangkan Precise menghitung berdasarkan tanggal 1 Sura yang sebenarnya.
+
+## Dasar Matematika
+
+### Jawa <-> Masehi (Direct)
 
 ```
-gregorianYear = jawaYear + max(78 - floor((jawaYear - 1555) / 34), 1)
+selisih = max(78 - floor((tahunJawa - 1555) / 34), 1)
+tahunMasehi = tahunJawa + selisih
 ```
 
-**Penjelasan:**
-- **Tahun dasar**: 1555 AJ = 1633 M (reformasi kalender Sultan Agung)
-- **Siklus**: Setiap 34 tahun, selisih berkurang 1
-- **Selisih minimum**: 1 tahun (kalender tidak bisa konvergen sempurna)
+- **1555 AJ = 1633 M**: titik referensi (reformasi Sultan Agung)
+- **Siklus 34 tahun**: setiap 34 tahun lunar, selisih berkurang 1
+- **Selisih minimum 1**: kalender tidak bisa konvergen sempurna
 
-### Formula Konversi Jawa ↔ Hijriyah
+### Jawa <-> Masehi (Precise)
 
-Konversi Hijriyah menggunakan offset tetap:
+```
+Jawa --> Hijriyah (offset 512) --> JDN (1 Muharram) --> Masehi
+```
+
+Menggunakan Julian Day Number untuk menentukan tahun Masehi di mana 1 Sura (= 1 Muharram tahun Hijriyah terkait) jatuh. Rujukan: [Calendrical Calculations](https://en.wikipedia.org/wiki/Calendrical_Calculations).
+
+### Jawa <-> Hijriyah
 
 ```
 hijriYear = jawaYear - 512
-jawaYear = hijriYear + 512
+jawaYear  = hijriYear + 512
 ```
 
-**Akurasi**: 100% reversible (kedua kalender berbasis lunar)
+100% reversible karena kedua kalender sama-sama berbasis lunar.
 
-### Presisi via Hijriyah (Civil) dan JDN
-
-Untuk presisi tahun (tahun Masehi saat 1 Sura jatuh), library menyediakan fungsi “Precise” berbasis kalender Islam sipil/tabular:
-
-```
-gYear(1 Sura AJ) = year(1 Muharram (AJ - 512) AH)
-```
-
-Implementasi memakai Julian Day Number untuk konversi Hijriyah↔Gregorian. Sumber rujukan umum: “Calendrical Calculations”.
-
-## 📊 Perbandingan Performa
-
-| Metrik | v1.x | v2.0.0 | Peningkatan |
-|--------|------|--------|-------------|
-| Akurasi | 82% | 90% | +8% |
-| Reversibility | 82% | 90% | +8% |
-| Kecepatan | 1x | 2x | 100% lebih cepat |
-| Memori | 50KB | 5KB | 90% lebih hemat |
-| Bundle Size | 15KB | 8KB | 47% lebih kecil |
-
-## 🔧 Error Handling
-
-v2.0.0 menyediakan error handling yang lebih baik:
+## Error Handling
 
 ```javascript
 try {
-  const result = konversiTahunJawaKeTahunMasehi("1955"); // Error: bukan integer
+  konversiTahunJawaKeTahunMasehi("1955"); // Error: bukan integer
 } catch (error) {
   console.error(error.message); // "Invalid Javanese year: must be an integer"
 }
-
-try {
-  const result = konversiTahunJawaKeTahunMasehi(1000); // Tahun historis
-  console.log(result); // 1095 (dengan warning)
-} catch (error) {
-  console.error(error.message);
-}
 ```
 
-## 🧪 Testing
+Tahun sebelum 1555 AJ (sebelum reformasi Sultan Agung) tetap dihitung, namun akan mengeluarkan warning karena korelasi historis belum tentu akurat.
 
-Jalankan test suite yang komprehensif:
+## Testing
 
 ```bash
 npm test
 ```
 
-Test coverage mencakup:
-- ✅ Konversi akurasi untuk titik referensi historis
-- ✅ Boundary condition testing
-- ✅ Reversibility validation
-- ✅ Error handling
-- ✅ Performance benchmarks
-- ✅ Backward compatibility
+## Migrasi dari v1.x
 
-## 📚 Migrasi dari v1.x
-
-### Tidak Ada Breaking Changes
-
-Kode yang sudah ada akan tetap berfungsi tanpa perubahan:
+Tidak ada breaking changes. Kode yang sudah ada tetap berfungsi:
 
 ```javascript
-// Kode v1.x tetap berfungsi di v2.0.0
+// Kode v1.x tetap berfungsi
 import {konversiTahunJawaKeTahunMasehi} from "@kalenderjawa/petungan";
 const result = konversiTahunJawaKeTahunMasehi(1955);
 ```
 
-### Rekomendasi Upgrade
-
-Untuk mendapatkan performa terbaik, pertimbangkan menggunakan API baru:
+Untuk performa terbaik, gunakan API Direct:
 
 ```javascript
-// Lama (masih didukung)
-import {konversiTahunJawaKeTahunMasehi} from "@kalenderjawa/petungan";
-
-// Baru (lebih cepat)
 import {konversiJawaMasehiDirect} from "@kalenderjawa/petungan";
 ```
 
-## 🤝 Kontribusi
+## Perbandingan Performa (v1.x vs v2.0)
+
+| Metrik | v1.x | v2.0 | Peningkatan |
+|--------|------|------|-------------|
+| Akurasi | 82% | 90% | +8% |
+| Kecepatan | 1x | 2x | 100% lebih cepat |
+| Memori | 50KB | 5KB | 90% lebih hemat |
+| Bundle | 15KB | 8KB | 47% lebih kecil |
+
+## Kontribusi
 
 Kontribusi sangat diterima! Silakan buat issue atau pull request di [GitHub repository](https://github.com/kalenderjawa/petungan).
 
-## 📄 Lisensi
+## Lisensi
 
 MIT License - lihat file [LICENSE](LICENSE) untuk detail.
 
-## 🙏 Acknowledgments
+## Referensi
 
-- Berdasarkan sistem kalender Jawa tradisional dan reformasi Sultan Agung (1633 M)
-- Menggunakan referensi historis dari berbagai sumber akademis
-- Algoritma matematika dikembangkan melalui analisis mendalam pola konversi kalender
-
-## 📚 References
-
-- Javanese calendar (overview and epoch by Sultan Agung, 1633 CE): [Wikipedia](https://en.wikipedia.org/wiki/Javanese_calendar)
-- Civil/tabular Islamic calendar algorithms and JDN methods: [Calendrical Calculations](https://en.wikipedia.org/wiki/Calendrical_Calculations)
-- Full algorithmic computation of Javanese dates (scripts and notes, incl. epoch 8 July 1633): [weton project](https://github.com/beaudu/weton)
-- Arithmetic aspects of the Javanese calendar (Pasaran congruence): [Karjanto & Beauducel, "An ethnoarithmetic excursion into the Javanese calendar"](https://arxiv.org/abs/2012.10064)
+- [Javanese calendar](https://en.wikipedia.org/wiki/Javanese_calendar) — overview and epoch by Sultan Agung, 1633 CE
+- [Calendrical Calculations](https://en.wikipedia.org/wiki/Calendrical_Calculations) — civil/tabular Islamic calendar algorithms and JDN methods
+- [weton project](https://github.com/beaudu/weton) — full algorithmic computation of Javanese dates
+- [Karjanto & Beauducel, "An ethnoarithmetic excursion into the Javanese calendar"](https://arxiv.org/abs/2012.10064) — arithmetic aspects of the Javanese calendar
