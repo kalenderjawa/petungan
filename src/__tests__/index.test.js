@@ -31,7 +31,7 @@ describe("NEW: Direct Mathematical Conversion Functions", () => {
     });
     
     it("should handle years after base correctly", () => {
-      expect(konversiJawaMasehiDirect(1955)).toBe(2022); // Corrected expected value
+      expect(konversiJawaMasehiDirect(1955)).toBe(2021);
     });
     
     it("should handle years before base correctly", () => {
@@ -51,7 +51,7 @@ describe("NEW: Direct Mathematical Conversion Functions", () => {
     });
     
     it("should handle modern years correctly", () => {
-      expect(konversiMasehiJawaDirect(2022)).toBe(1955); // Corrected expected value
+      expect(konversiMasehiJawaDirect(2022)).toBe(1956);
     });
     
     it("should throw error for invalid input", () => {
@@ -110,8 +110,8 @@ describe("NEW: Precise Hijri-based Conversion Functions", () => {
     }
   });
 
-  it("Direct and Precise should differ on known cases (e.g., 1955 AJ)", () => {
-    expect(konversiJawaMasehiDirect(1955)).not.toBe(konversiJawaMasehiPrecise(1955));
+  it("Direct and Precise should agree on 1955 AJ after continuous drift fix", () => {
+    expect(konversiJawaMasehiDirect(1955)).toBe(konversiJawaMasehiPrecise(1955));
   });
 });
 

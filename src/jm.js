@@ -46,8 +46,11 @@ import {
  * @throws {Error} If input is invalid or conversion fails
  */
 function konversiTahunMasehiKeTahunJawa(tahunMasehi) {
+  if (typeof tahunMasehi !== 'number' || !Number.isInteger(tahunMasehi)) {
+    throw new Error('Invalid Gregorian year: must be an integer');
+  }
+
   try {
-    // Use new direct mathematical conversion
     return konversiMasehiJawaDirect(tahunMasehi);
   } catch (error) {
     // Fallback to legacy behavior for backward compatibility
@@ -82,8 +85,11 @@ function konversiTahunMasehiKeTahunJawa(tahunMasehi) {
  * @throws {Error} If input is invalid
  */
 function konversiTahunJawaKeTahunMasehi(tahunJawa) {
+  if (typeof tahunJawa !== 'number' || !Number.isInteger(tahunJawa)) {
+    throw new Error('Invalid Javanese year: must be an integer');
+  }
+
   try {
-    // Use new direct mathematical conversion
     return konversiJawaMasehiDirect(tahunJawa);
   } catch (error) {
     // Fallback to legacy behavior for backward compatibility

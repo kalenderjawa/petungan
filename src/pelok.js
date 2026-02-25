@@ -28,10 +28,12 @@ const JAVANESE_CALENDAR_CONSTANTS = {
   BASE_GREGORIAN: 1633,      // Corresponding Gregorian year
   BASE_HIJRI: 1043,          // Corresponding Hijri year
   INITIAL_DIFFERENCE: 78,    // Initial difference between Jawa and Gregorian
-  CYCLE_LENGTH: 34,          // Years per conversion cycle (was incorrectly 33 in old system)
+  CYCLE_LENGTH: 34,          // Approximate years per conversion cycle (kept for legacy table generation)
   DIFFERENCE_DECAY: 1,       // How much difference decreases per cycle
   MIN_DIFFERENCE: 1,         // Minimum possible difference
-  HIJRI_OFFSET: 512          // Fixed offset between Jawa and Hijri (1555 - 1043)
+  HIJRI_OFFSET: 512,         // Fixed offset between Jawa and Hijri (1555 - 1043)
+  DRIFT_PER_YEAR: 10.875833, // Daily drift between solar and lunar years (365.2425 - 354.36667)
+  SOLAR_YEAR_DAYS: 365.2425, // Mean tropical year length in days
 };
 
 // Epoch for the civil/tabular Islamic calendar (1 Muharram 1 AH) in JDN
@@ -104,36 +106,24 @@ function jdnToIslamic(jdn) {
  * @throws {Error} If input is invalid
  */
 function konversiJawaMasehiDirect(jawaYear) {
-  // Input validation (NEW)
   if (typeof jawaYear !== 'number' || !Number.isInteger(jawaYear)) {
     throw new Error('Invalid Javanese year: must be an integer');
   }
-  
-  const { BASE_JAWA, INITIAL_DIFFERENCE, CYCLE_LENGTH, DIFFERENCE_DECAY, MIN_DIFFERENCE } = JAVANESE_CALENDAR_CONSTANTS;
-  
-  // Handle base year directly
-  if (jawaYear === BASE_JAWA) {
-    return JAVANESE_CALENDAR_CONSTANTS.BASE_GREGORIAN;
-  }
-  
-  // Calculate years from base and determine cycle position
+
+  const { BASE_JAWA, INITIAL_DIFFERENCE, MIN_DIFFERENCE, DRIFT_PER_YEAR, SOLAR_YEAR_DAYS } = JAVANESE_CALENDAR_CONSTANTS;
+
   const yearsFromBase = jawaYear - BASE_JAWA;
-  
-  let difference;
-  if (yearsFromBase >= 0) {
-    // After base year - difference decreases over time
-    const cyclesPassed = Math.floor(yearsFromBase / CYCLE_LENGTH);
-    difference = INITIAL_DIFFERENCE - (cyclesPassed * DIFFERENCE_DECAY);
-  } else {
-    // Before base year - difference was larger (NEW: supports historical years)
-    const cyclesBack = Math.ceil(-yearsFromBase / CYCLE_LENGTH);
-    difference = INITIAL_DIFFERENCE + (cyclesBack * DIFFERENCE_DECAY);
-  }
-  
-  // Apply minimum difference constraint
-  const finalDifference = Math.max(difference, MIN_DIFFERENCE);
-  
-  return jawaYear + finalDifference;
+
+  // Continuous drift: lunar year is ~10.876 days shorter than solar year.
+  // After enough accumulated drift to fill a full solar year, the difference drops by 1.
+  const totalDrift = Math.abs(yearsFromBase) * DRIFT_PER_YEAR;
+  const differenceDecrement = Math.round(totalDrift / SOLAR_YEAR_DAYS);
+
+  const difference = yearsFromBase >= 0
+    ? INITIAL_DIFFERENCE - differenceDecrement
+    : INITIAL_DIFFERENCE + differenceDecrement;
+
+  return jawaYear + Math.max(difference, MIN_DIFFERENCE);
 }
 
 /**
@@ -233,24 +223,35 @@ function konversiMasehiJawaPrecise(gregorianYear) {
   const jan1Jdn = gregorianToJdn(gregorianYear, 1, 1);
   const islamicAtJan1 = jdnToIslamic(jan1Jdn).year;
 
-  // Check nearby Hijri years for which 1 Muharram falls in the target Gregorian year
+  // Check nearby Hijri years for which 1 Muharram falls in the target Gregorian year.
+  // Pick the LARGEST matching Hijri year (the most recent 1 Sura in that Gregorian year).
+  const dec31Jdn = gregorianToJdn(gregorianYear, 12, 31);
+  let bestMatch = null;
   for (let delta = -2; delta <= 2; delta++) {
     const y = islamicAtJan1 + delta;
     const startJdn = islamicToJdn(y, 1, 1);
-    const startG = jdnToGregorian(startJdn).year;
-    if (startG === gregorianYear) {
-      return y + JAVANESE_CALENDAR_CONSTANTS.HIJRI_OFFSET;
+    if (startJdn >= jan1Jdn && startJdn <= dec31Jdn) {
+      if (bestMatch === null || y > bestMatch) {
+        bestMatch = y;
+      }
     }
   }
+  if (bestMatch !== null) {
+    return bestMatch + JAVANESE_CALENDAR_CONSTANTS.HIJRI_OFFSET;
+  }
 
-  // Fallback: choose the Hijri New Year closest within the year window
-  const dec31Jdn = gregorianToJdn(gregorianYear, 12, 31);
+  // Fallback: choose the Hijri New Year closest to the year window
   let bestY = islamicAtJan1;
   let bestDist = Number.POSITIVE_INFINITY;
   for (let y = islamicAtJan1 - 3; y <= islamicAtJan1 + 3; y++) {
     const startJdn = islamicToJdn(y, 1, 1);
-    const dist = Math.max(0, Math.min(Math.abs(startJdn - jan1Jdn), Math.abs(startJdn - dec31Jdn)));
-    if (dist < bestDist) {
+    let dist;
+    if (startJdn >= jan1Jdn && startJdn <= dec31Jdn) {
+      dist = 0;
+    } else {
+      dist = Math.min(Math.abs(startJdn - jan1Jdn), Math.abs(startJdn - dec31Jdn));
+    }
+    if (dist < bestDist || (dist === bestDist && y > bestY)) {
       bestDist = dist;
       bestY = y;
     }
@@ -317,40 +318,25 @@ function tabelKonstantaKonversiTahunMasehi() {
  */
 function cariTahunReferensi(tabelKonstantaKonversiTahun, tahun) {
   try {
-    // Determine if this is a Javanese or Gregorian year based on typical ranges
-    const isLikelyJavanese = tahun >= 1000 && tahun <= 3000;
-    const isLikelyGregorian = tahun >= 1600 && tahun <= 4000;
-    
-    let difference;
-    if (isLikelyJavanese && !isLikelyGregorian) {
-      // Treat as Javanese year
-      const yearsFromBase = tahun - JAVANESE_CALENDAR_CONSTANTS.BASE_JAWA;
-      const cyclesPassed = Math.floor(Math.abs(yearsFromBase) / JAVANESE_CALENDAR_CONSTANTS.CYCLE_LENGTH);
-      
-      if (yearsFromBase >= 0) {
-        difference = JAVANESE_CALENDAR_CONSTANTS.INITIAL_DIFFERENCE - cyclesPassed;
-      } else {
-        difference = JAVANESE_CALENDAR_CONSTANTS.INITIAL_DIFFERENCE + cyclesPassed;
-      }
-    } else {
-      // Treat as Gregorian year
-      const yearsFromBase = tahun - JAVANESE_CALENDAR_CONSTANTS.BASE_GREGORIAN;
-      const cyclesPassed = Math.floor(Math.abs(yearsFromBase) / JAVANESE_CALENDAR_CONSTANTS.CYCLE_LENGTH);
-      
-      if (yearsFromBase >= 0) {
-        difference = JAVANESE_CALENDAR_CONSTANTS.INITIAL_DIFFERENCE - cyclesPassed;
-      } else {
-        difference = JAVANESE_CALENDAR_CONSTANTS.INITIAL_DIFFERENCE + cyclesPassed;
-      }
-    }
-    
-    difference = Math.max(difference, JAVANESE_CALENDAR_CONSTANTS.MIN_DIFFERENCE);
-    
-    // Calculate the range this year falls into
-    const baseYear = isLikelyJavanese ? JAVANESE_CALENDAR_CONSTANTS.BASE_JAWA : JAVANESE_CALENDAR_CONSTANTS.BASE_GREGORIAN;
+    // Determine calendar type from the table's first entry, not from heuristics
+    const baseYear = (Array.isArray(tabelKonstantaKonversiTahun) && tabelKonstantaKonversiTahun.length > 0)
+      ? tabelKonstantaKonversiTahun[0].tahunAwal
+      : JAVANESE_CALENDAR_CONSTANTS.BASE_GREGORIAN;
+
     const yearsFromBase = tahun - baseYear;
+    const cyclesPassed = Math.floor(Math.abs(yearsFromBase) / JAVANESE_CALENDAR_CONSTANTS.CYCLE_LENGTH);
+
+    let difference;
+    if (yearsFromBase >= 0) {
+      difference = JAVANESE_CALENDAR_CONSTANTS.INITIAL_DIFFERENCE - cyclesPassed;
+    } else {
+      difference = JAVANESE_CALENDAR_CONSTANTS.INITIAL_DIFFERENCE + cyclesPassed;
+    }
+
+    difference = Math.max(difference, JAVANESE_CALENDAR_CONSTANTS.MIN_DIFFERENCE);
+
     const cycleIndex = Math.floor(Math.abs(yearsFromBase) / JAVANESE_CALENDAR_CONSTANTS.CYCLE_LENGTH);
-    
+
     let rangeStart, rangeEnd;
     if (yearsFromBase >= 0) {
       rangeStart = baseYear + (cycleIndex * JAVANESE_CALENDAR_CONSTANTS.CYCLE_LENGTH);
@@ -359,14 +345,14 @@ function cariTahunReferensi(tabelKonstantaKonversiTahun, tahun) {
       rangeEnd = baseYear - (cycleIndex * JAVANESE_CALENDAR_CONSTANTS.CYCLE_LENGTH) - 1;
       rangeStart = rangeEnd - JAVANESE_CALENDAR_CONSTANTS.CYCLE_LENGTH + 1;
     }
-    
+
     return {
       konstan: difference,
       tahunAwal: rangeStart,
       tahunAkhir: rangeEnd
     };
   } catch (error) {
-    return null; // Maintain original behavior of returning undefined/null on error
+    return null;
   }
 }
 

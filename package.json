@@ -7,9 +7,9 @@
   "browser": "lib/petungan.browser.min.js",
   "exports": {
     ".": {
-      "require": "./lib/petungan.min.cjs",
+      "browser": "./lib/petungan.browser.min.js",
       "import": "./lib/petungan.min.js",
-      "browser": "./lib/petungan.browser.min.js"
+      "require": "./lib/petungan.min.cjs"
     },
     "./package.json": "./package.json"
   },

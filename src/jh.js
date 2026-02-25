@@ -48,15 +48,11 @@ function konversiTahunJawaKeTahunHijriyah(tahunJawa) {
     throw new Error('Invalid Javanese year: must be an integer');
   }
   
-  // Handle years before calendar correlation (IMPROVED)
+  // Warn for years before calendar correlation but still apply offset
   if (tahunJawa < AWAL_TAHUN_JAWA) {
-    // For years before Sultan Agung's calendar reform, 
-    // the correlation with Hijri calendar is uncertain
     console.warn(`Warning: Javanese year ${tahunJawa} is before calendar standardization (${AWAL_TAHUN_JAWA}). Conversion may not be historically accurate.`);
-    return tahunJawa; // Return as-is for backward compatibility
   }
-  
-  // Standard conversion for years after calendar correlation
+
   return tahunJawa - KONSTANTA_KONVERSI_HIJRIYAH;
 }
 
@@ -83,15 +79,11 @@ function konversiTahunHijriyahKeTahunJawa(tahunHijriyah) {
     throw new Error('Invalid Hijri year: must be an integer');
   }
   
-  // Handle years before calendar correlation (IMPROVED)
+  // Warn for years before calendar correlation but still apply offset
   if (tahunHijriyah < AWAL_TAHUN_HIJRIYAH) {
-    // For years before the Javanese-Hijri calendar correlation,
-    // the relationship is uncertain
     console.warn(`Warning: Hijri year ${tahunHijriyah} is before Javanese calendar correlation (${AWAL_TAHUN_HIJRIYAH}). Conversion may not be historically accurate.`);
-    return tahunHijriyah; // Return as-is for backward compatibility
   }
-  
-  // Standard conversion for years after calendar correlation
+
   return tahunHijriyah + KONSTANTA_KONVERSI_HIJRIYAH;
 }
 

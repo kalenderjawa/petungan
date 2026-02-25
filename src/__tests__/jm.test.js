@@ -21,10 +21,8 @@ describe("UPDATED: Test konversi Jawa ke Masehi", () => {
     expect(konversiTahunJawaKeTahunMasehi(1555)).toBe(1633);
   });
 
-  it("Konversi Tahun Jawa 1955 ke Masehi (updated expectation)", () => {
-    const result = konversiTahunJawaKeTahunMasehi(1955);
-    // New algorithm produces this result
-    expect(result).toBe(2022); // Corrected expected value
+  it("Konversi Tahun Jawa 1955 ke Masehi adalah 2021", () => {
+    expect(konversiTahunJawaKeTahunMasehi(1955)).toBe(2021);
   });
   
   it("should handle boundary years correctly", () => {
@@ -48,12 +46,10 @@ describe("UPDATED: Test konversi Jawa ke Masehi", () => {
     expect(result).toBeGreaterThan(1000);
   });
   
-  it("should handle invalid input gracefully", () => {
-    // The main functions now have fallback behavior, so they may not throw
-    // but should produce reasonable results or warnings
-    expect(() => konversiTahunJawaKeTahunMasehi("1955")).not.toThrow();
-    expect(() => konversiTahunJawaKeTahunMasehi(1955.5)).not.toThrow();
-    expect(() => konversiTahunJawaKeTahunMasehi(null)).not.toThrow();
+  it("should throw for invalid input", () => {
+    expect(() => konversiTahunJawaKeTahunMasehi("1955")).toThrow("Invalid Javanese year: must be an integer");
+    expect(() => konversiTahunJawaKeTahunMasehi(1955.5)).toThrow("Invalid Javanese year: must be an integer");
+    expect(() => konversiTahunJawaKeTahunMasehi(null)).toThrow("Invalid Javanese year: must be an integer");
   });
 });
 
@@ -62,14 +58,12 @@ describe("UPDATED: Test konversi Masehi ke Jawa", () => {
     expect(konversiTahunMasehiKeTahunJawa(1633)).toBe(1555);
   });
 
-  it("Konversi Tahun Masehi 1983 ke Jawa (updated expectation)", () => {
-    const result = konversiTahunMasehiKeTahunJawa(1983);
-    expect(result).toBeCloseTo(1915, 0); // Allow ±1 year tolerance
+  it("Konversi Tahun Masehi 1983 ke Jawa adalah 1916", () => {
+    expect(konversiTahunMasehiKeTahunJawa(1983)).toBe(1916);
   });
 
-  it("Konversi Tahun Masehi 2022 ke Jawa (updated expectation)", () => {
-    const result = konversiTahunMasehiKeTahunJawa(2022);
-    expect(result).toBe(1955); // Corrected expected value
+  it("Konversi Tahun Masehi 2022 ke Jawa adalah 1956", () => {
+    expect(konversiTahunMasehiKeTahunJawa(2022)).toBe(1956);
   });
   
   it("should handle boundary years correctly", () => {
@@ -84,12 +78,10 @@ describe("UPDATED: Test konversi Masehi ke Jawa", () => {
     expect(typeof result1667).toBe('number');
   });
   
-  it("should handle invalid input gracefully", () => {
-    // The main functions now have fallback behavior, so they may not throw
-    // but should produce reasonable results or warnings
-    expect(() => konversiTahunMasehiKeTahunJawa("2022")).not.toThrow();
-    expect(() => konversiTahunMasehiKeTahunJawa(2022.5)).not.toThrow();
-    expect(() => konversiTahunMasehiKeTahunJawa(undefined)).not.toThrow();
+  it("should throw for invalid input", () => {
+    expect(() => konversiTahunMasehiKeTahunJawa("2022")).toThrow("Invalid Gregorian year: must be an integer");
+    expect(() => konversiTahunMasehiKeTahunJawa(2022.5)).toThrow("Invalid Gregorian year: must be an integer");
+    expect(() => konversiTahunMasehiKeTahunJawa(undefined)).toThrow("Invalid Gregorian year: must be an integer");
   });
 });
 

@@ -24,16 +24,15 @@ describe("ENHANCED: Test Konversi Jawa Ke Hijriyah", () => {
     expect(konversiTahunJawaKeTahunHijriyah(1955)).toBe(1443);
   });
   
-  it("should handle years before calendar correlation", () => {
-    // Years before 1555 AJ should return unchanged (with warning)
+  it("should convert years before calendar correlation with warning", () => {
     const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
-    
+
     const result = konversiTahunJawaKeTahunHijriyah(1500);
-    expect(result).toBe(1500);
+    expect(result).toBe(988); // 1500 - 512
     expect(consoleSpy).toHaveBeenCalledWith(
       expect.stringContaining('Warning: Javanese year 1500 is before calendar standardization')
     );
-    
+
     consoleSpy.mockRestore();
   });
   
@@ -73,16 +72,15 @@ describe("ENHANCED: Test konversi Hijriyah ke Jawa", () => {
     expect(konversiTahunHijriyahKeTahunJawa(1443)).toBe(1955);
   });
   
-  it("should handle years before calendar correlation", () => {
-    // Years before 1043 AH should return unchanged (with warning)
+  it("should convert years before calendar correlation with warning", () => {
     const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
-    
+
     const result = konversiTahunHijriyahKeTahunJawa(1000);
-    expect(result).toBe(1000);
+    expect(result).toBe(1512); // 1000 + 512
     expect(consoleSpy).toHaveBeenCalledWith(
       expect.stringContaining('Warning: Hijri year 1000 is before Javanese calendar correlation')
     );
-    
+
     consoleSpy.mockRestore();
   });
   

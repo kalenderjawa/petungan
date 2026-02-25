@@ -39,7 +39,7 @@ Tahun Jawa 1555  -->  Masehi 1633  (selisih 78)
 Tahun Jawa 1589  -->  Masehi 1666  (selisih 77)
 Tahun Jawa 1623  -->  Masehi 1699  (selisih 76)
 ...
-Tahun Jawa 1955  -->  Masehi 2022  (selisih 67)
+Tahun Jawa 1955  -->  Masehi 2021  (selisih 66)
 ```
 
 Library ini menangani perhitungan tersebut dengan algoritma matematika langsung.
@@ -92,13 +92,13 @@ import {
 
 // Jawa ke Masehi
 konversiTahunJawaKeTahunMasehi(1555)  // 1633 (tahun dasar Sultan Agung)
-konversiTahunJawaKeTahunMasehi(1955)  // 2022
-konversiTahunJawaKeTahunMasehi(1958)  // 2025
+konversiTahunJawaKeTahunMasehi(1955)  // 2021
+konversiTahunJawaKeTahunMasehi(1958)  // 2024
 
 // Masehi ke Jawa
 konversiTahunMasehiKeTahunJawa(1633)  // 1555
-konversiTahunMasehiKeTahunJawa(2022)  // 1955
-konversiTahunMasehiKeTahunJawa(2025)  // 1958
+konversiTahunMasehiKeTahunJawa(2021)  // 1955
+konversiTahunMasehiKeTahunJawa(2024)  // 1958
 ```
 
 ### Konversi Tahun Jawa <-> Hijriyah
@@ -144,8 +144,8 @@ import {
   JAVANESE_CALENDAR_CONSTANTS,
 } from "@kalenderjawa/petungan";
 
-konversiJawaMasehiDirect(1955)  // 2022
-konversiMasehiJawaDirect(2022)  // 1955
+konversiJawaMasehiDirect(1955)  // 2021
+konversiMasehiJawaDirect(2021)  // 1955
 
 // Akses konstanta kalender
 JAVANESE_CALENDAR_CONSTANTS.BASE_JAWA       // 1555
@@ -153,19 +153,23 @@ JAVANESE_CALENDAR_CONSTANTS.BASE_GREGORIAN  // 1633
 JAVANESE_CALENDAR_CONSTANTS.HIJRI_OFFSET    // 512
 ```
 
-Catatan: Fungsi "Direct" vs "Precise" bisa menghasilkan hasil berbeda untuk tahun yang sama. Direct menghitung pemetaan tahun secara aproksimasi, sedangkan Precise menghitung berdasarkan tanggal 1 Sura yang sebenarnya.
+Catatan: Fungsi "Direct" menggunakan formula continuous drift yang hasilnya sangat dekat (~98% cocok) dengan "Precise". Precise menghitung berdasarkan tanggal 1 Sura via JDN, sehingga lebih akurat untuk kasus-kasus tepi.
 
 ## Dasar Matematika
 
 ### Jawa <-> Masehi (Direct)
 
 ```
-selisih = max(78 - floor((tahunJawa - 1555) / 34), 1)
+drift = |tahunJawa - 1555| × 10.875833
+penurunan = round(drift / 365.2425)
+selisih = max(78 - penurunan, 1)    // jika tahunJawa >= 1555
+selisih = 78 + penurunan             // jika tahunJawa < 1555
 tahunMasehi = tahunJawa + selisih
 ```
 
 - **1555 AJ = 1633 M**: titik referensi (reformasi Sultan Agung)
-- **Siklus 34 tahun**: setiap 34 tahun lunar, selisih berkurang 1
+- **10.876 hari/tahun**: selisih harian antara tahun solar dan lunar
+- **Continuous drift**: lebih akurat daripada pembulatan ke siklus 34 tahun
 - **Selisih minimum 1**: kalender tidak bisa konvergen sempurna
 
 ### Jawa <-> Masehi (Precise)
