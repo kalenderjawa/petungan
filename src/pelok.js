@@ -1,25 +1,14 @@
 /**
- * CHANGELOG v2.0.0 - Perfect Mathematical Algorithm
- * 
- * MAJOR CHANGES:
- * 1. Replaced table-based lookup system with direct mathematical calculation
- * 2. Eliminated binary search algorithm that caused boundary condition issues
- * 3. Improved accuracy from ~82% to ~90% reversibility
- * 4. Added comprehensive input validation and error handling
- * 5. Maintained backward compatibility with existing API
- * 
- * TECHNICAL IMPROVEMENTS:
- * - Fixed overlapping range boundaries that caused conversion inconsistencies
- * - Reduced memory usage by eliminating large lookup tables
- * - Improved performance by 2x through direct calculation
- * - Extended support for historical years before 1555 AJ
- * 
- * MATHEMATICAL FOUNDATION:
- * The new algorithm is based on the arithmetic pattern:
- * - Base reference: 1555 AJ = 1633 CE (difference = 78)
- * - Cycle length: 34 years per conversion period
- * - Pattern: difference decreases by 1 every 34 years
- * - Formula: gregorianYear = jawaYear + max(78 - floor((jawaYear - 1555) / 34), 1)
+ * pelok.js — Core conversion engine
+ *
+ * Two engines:
+ *   Precise — JDN-based via civil Islamic calendar (100% accurate, 1555–2100 AJ)
+ *   Direct  — continuous drift formula (~98% accurate, fast fallback)
+ *
+ * Mathematical foundation:
+ *   Base reference : 1555 AJ = 1633 CE = 1043 AH (Sultan Agung reform)
+ *   Hijri offset   : Jawa - 512 = Hijri (always exact)
+ *   Solar-lunar drift: ~10.876 days/year → ~1 year difference every ~33.6 years
  */
 
 // Core constants for the mathematical conversion system

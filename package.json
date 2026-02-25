@@ -1,7 +1,7 @@
 {
   "name": "@kalenderjawa/petungan",
   "version": "2.1.0",
-  "description": "Utilitas untuk pengkonversian sistem Kalender Jawa dengan algoritma matematika yang disempurnakan. Akurasi 90%, performa 2x lebih cepat.",
+  "description": "Utilitas konversi tahun Kalender Jawa, Masehi, dan Hijriyah. Akurasi 100% (berbasis JDN), tervalidasi terhadap data almnk.com.",
   "main": "lib/petungan.min.cjs",
   "module": "lib/petungan.min.js",
   "browser": "lib/petungan.browser.min.js",
