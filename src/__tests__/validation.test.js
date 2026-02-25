@@ -69,13 +69,28 @@ describe("VALIDATION: Direct functions vs real-world data", () => {
   });
 });
 
-// ── 3. Main wrapper functions (konversiTahunJawaKeTahunMasehi) ───────
+// ── 3. Main wrapper functions (now Precise-backed, expect exact match) ────
 describe("VALIDATION: Main wrapper functions vs real-world data", () => {
   GROUND_TRUTH.forEach(({ jawa, gregorianYear, note }) => {
-    it(`Main: ${jawa} AJ → should be close to ${gregorianYear} CE  (${note})`, () => {
-      const result = konversiTahunJawaKeTahunMasehi(jawa);
-      const diff = Math.abs(result - gregorianYear);
-      expect(diff).toBeLessThanOrEqual(1);
+    it(`Main: ${jawa} AJ → ${gregorianYear} CE  (${note})`, () => {
+      expect(konversiTahunJawaKeTahunMasehi(jawa)).toBe(gregorianYear);
+    });
+  });
+
+  GROUND_TRUTH.forEach(({ jawa, gregorianYear, note }) => {
+    it(`Main reverse: ${gregorianYear} CE → ${jawa} AJ  (${note})`, () => {
+      expect(konversiTahunMasehiKeTahunJawa(gregorianYear)).toBe(jawa);
+    });
+  });
+});
+
+// ── 3b. Main wrapper round-trip ──────────────────────────────────────
+describe("VALIDATION: Main wrapper round-trip reversibility", () => {
+  GROUND_TRUTH.forEach(({ jawa, note }) => {
+    it(`Main round-trip: ${jawa} AJ → Masehi → back  (${note})`, () => {
+      const masehi = konversiTahunJawaKeTahunMasehi(jawa);
+      const back = konversiTahunMasehiKeTahunJawa(masehi);
+      expect(back).toBe(jawa);
     });
   });
 });

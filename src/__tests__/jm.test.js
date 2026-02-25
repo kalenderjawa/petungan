@@ -14,6 +14,7 @@ import {
   konversiTahunMasehiKeTahunJawa,
   konversiJawaMasehiDirect,
   konversiMasehiJawaDirect,
+  konversiJawaMasehiPrecise,
 } from "../index.js";
 
 describe("UPDATED: Test konversi Jawa ke Masehi", () => {
@@ -106,14 +107,14 @@ describe("NEW: Reversibility Tests", () => {
 });
 
 describe("NEW: Algorithm Consistency Tests", () => {
-  it("should produce consistent results between main and direct functions", () => {
+  it("should produce consistent results between main and precise functions", () => {
     const testYears = [1555, 1600, 1700, 1800, 1900, 1955];
-    
+
     testYears.forEach(jawaYear => {
       const mainResult = konversiTahunJawaKeTahunMasehi(jawaYear);
-      const directResult = konversiJawaMasehiDirect(jawaYear);
-      
-      expect(mainResult).toBe(directResult);
+      const preciseResult = konversiJawaMasehiPrecise(jawaYear);
+
+      expect(mainResult).toBe(preciseResult);
     });
   });
   
